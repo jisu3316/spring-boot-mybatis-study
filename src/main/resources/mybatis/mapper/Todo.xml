@@ -6,7 +6,11 @@
 <mapper namespace="com.example.demo.dao.TodoDAO">
 
     <!-- 뉴스 조회 -->
-    <select id="list" resultType="Todo">
+    <select id="list" resultType="com.example.demo.model.Todo">
         select * from todo
+    </select>
+
+    <select id="selectOne" resultType="com.example.demo.model.Todo">
+        select * from todo where id = #{todoId}
     </select>
 </mapper>
