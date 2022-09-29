@@ -4,6 +4,7 @@ import com.example.demo.dao.TodoDAO;
 import com.example.demo.model.Todo;
 import com.example.demo.response.Response;
 import com.example.demo.response.TodoResponse;
+import com.example.demo.service.PaginationService;
 import com.example.demo.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
@@ -33,6 +34,8 @@ public class DemoApplication {
 	private final TodoDAO todoDAO;
 	private final TodoService todoService;
 
+	private final PaginationService paginationService;
+
 	@RequestMapping("/news")
 	public String news(Model model) throws Exception {
 		Map<String, Object> rtnObj = new HashMap<> ();
@@ -43,6 +46,8 @@ public class DemoApplication {
 
 		rtnObj.put("list", list);
 		model.addAttribute("list", rtnObj);
+		List<Integer> paginationBarNumbers = paginationService.getPaginationBarNumbers(0, 1);
+		model.addAttribute("paginationBarNumbers", paginationBarNumbers);
 		return "index";
 	}
 

@@ -19,9 +19,14 @@ public class TodoService {
 
     public List<TodoResponse> getTodo() {
         List<TodoResponse> list = todoDAO.list().stream().map(TodoResponse::from).collect(Collectors.toList());
+       
         return list;
     }
+    public Integer totalCount() {
 
+        Integer count = (int)Math.ceil((double)todoDAO.count()/10);
+        return count;
+    }
     public Todo modify(Long todoId) {
         return todoDAO.selectOne(todoId).orElseThrow(() -> new SnsApplicationException(ErrorCode.POST_NOT_FOUND, String.format("%s not found", todoId)));
 //        todoDAO.modify(todoId);

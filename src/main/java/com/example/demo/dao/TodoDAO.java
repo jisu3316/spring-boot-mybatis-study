@@ -16,4 +16,6 @@ public interface TodoDAO {
     void modify(Long todoId);
 
     Optional<Todo> selectOne(Long todoId);
+
+    Integer count();
 }

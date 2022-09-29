@@ -13,4 +13,8 @@
     <select id="selectOne" resultType="com.example.demo.model.Todo">
         select * from todo where id = #{todoId}
     </select>
+
+    <select id="count" resultType="Integer">
+        select count(*) from todo
+    </select>
 </mapper>
