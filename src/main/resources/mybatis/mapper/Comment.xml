@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.dao.CommentDAO">
+
+    <select id="comments" resultType="Comment" >
+        select * from comment where board_id = #{boardId} order by group_id desc ,depth
+    </select>
+
+    <select id="getComment" resultType="Comment">
+        select * from comment where comment_id = #{commentId}
+    </select>
+
+    <insert id="createComment" parameterType="com.example.demo.dto.request.CommentRequest" useGeneratedKeys="true" keyProperty="commentId" keyColumn="comment_id">
+        insert into comment(board_id, comment, comment_user_name, comment_password, group_id, depth)
+                values (#{boardId}, #{comment}, #{commentUserName}, #{commentPassword}, 0 , 0)
+    </insert>
+
+    <insert id="reComment" parameterType="com.example.demo.dto.request.CommentRequest" >
+        insert into comment(board_id, comment, comment_user_name, comment_password, group_id, depth)
+        values (#{boardId}, #{comment}, #{commentUserName}, #{commentPassword}, #{groupId} , #{depth} + 1)
+    </insert>
+
+    <update id="updateGroupId" parameterType="Integer">
+        update comment set group_id = #{commentId} where comment_id = #{commentId}
+    </update>
+
+    <update id="updateComment" parameterType="map">
+        update comment set comment = #{comment} where comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteComment" parameterType="Integer">
+        delete from comment where comment_id = #{commentId}
+    </delete>
+</mapper>
+

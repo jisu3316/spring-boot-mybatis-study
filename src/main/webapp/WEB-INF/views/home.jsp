@@ -12,7 +12,7 @@
         function test() {
             let result = {"todoId": 5};
             $.ajax({
-                url:"/news/" + 1,
+                url:"/news/" + 2,
                 type: "PUT",
                 dataType: "json",
                 // data: result,

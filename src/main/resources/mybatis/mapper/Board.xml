@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.dao.BoardDAO">
+
+    <sql id="criteria">
+            <choose>
+                <when test="searchType.equals('boardTitle')">
+                    <include refid="where"></include> and board_title like CONCAT ('%', #{searchValue}, '%')
+                </when>
+                <when test="searchType.equals('boardContent')">
+                    <include refid="where"></include> and board_content like CONCAT ('%', #{searchValue}, '%')
+                </when>
+                <when test="searchType.equals('createAt')">
+                    <choose>
+                        <when test="!startDate.equals('startDate')">
+                            <include refid="where"></include> <![CDATA[ and create_at >= #{startDate} ]]>
+                        </when>
+                        <when test="!endDate.equals('endDate')">
+                            <include refid="where"></include> <![CDATA[ and create_at <= CONCAT(#{endDate}, ' ' , '23:59:59') ]]>
+                        </when>
+
+                        <when test="!startDate.equals('startDate') and !endDate.equals('endDate')">
+                            <include refid="where"></include> <![CDATA[ and create_at >= #{startDate} and create_at <= CONCAT(#{endDate}, ' ' , '23:59:59') ]]>
+                        </when>
+                        <otherwise>
+                            <include refid="where"></include>
+                        </otherwise>
+                    </choose>
+                </when>
+                <when test="searchType.equals('deleteYN')">
+                    where delete_YN = 'Y'
+                </when>
+            </choose>
+    </sql>
+
+    <sql id="where">
+        where delete_YN = 'N'
+    </sql>
+
+    <select id="boards" resultType="Board" parameterType="com.example.demo.dto.request.SearchBoardRequest">
+        select * from board
+                 <choose>
+                     <when test="searchType == null || searchType == ''">
+                         <include refid="where"></include>
+                     </when>
+                     <otherwise>
+                        <include refid="criteria"/>
+                     </otherwise>
+                 </choose>
+        order by board_id desc limit #{pageStart}, #{perPageNum}
+    </select>
+
+    <select id="getBoard" resultType="Board">
+        select *
+        from board
+        where board_id = #{boardId}
+    </select>
+
+    <select id="getSearchTotalCount" resultType="Integer" parameterType="com.example.demo.dto.request.SearchBoardRequest">
+        select count(*)
+        from board
+        <choose>
+            <when test="searchType == null || searchType == ''">
+                <include refid="where"></include>
+            </when>
+            <otherwise>
+                <include refid="criteria"/>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="createBoard" parameterType="com.example.demo.dto.request.BoardFormRequest" useGeneratedKeys="true"
+            keyProperty="boardId" keyColumn="board_id">
+        insert into board(board_title, board_content, board_user_name, board_password, create_at, delete_YN)
+        values (#{boardTitle}, #{boardContent}, #{boardUserName}, #{boardPassword}, now(), default)
+    </insert>
+
+    <update id="updateBoard" parameterType="com.example.demo.dto.request.BoardFormRequest">
+        update board
+        set board_title   = #{boardTitle},
+            board_content = #{boardContent}
+        where board_id = #{boardId}
+    </update>
+
+    <update id="deleteBoard" parameterType="Integer">
+        update board
+        set delete_YN = 'Y'
+        where board_id = #{boardId}
+    </update>
+</mapper>
