@@ -6,13 +6,13 @@
     word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
-/*.col-2 mb-3 align-self-center {*/
-/*    float: left;*/
-/*}*/
+.col-2 mb-3 align-self-center {
+    float: left;
+}
 
-/*.btn btn-outline-danger {*/
-/*    float: left;*/
-/*}*/
-/*.btn btn-outline-danger {*/
-/*    float: left;*/
-/*}*/
+.btn btn-outline-danger {
+    float: left;
+}
+.btn btn-outline-danger {
+    float: left;
+}

@@ -7,19 +7,20 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Mapper
 public interface BoardDAO {
     List<Board> boards(SearchBoardRequest boardRequest);
 
-    Board getBoard(Integer boardId);
+    Optional<Board> getBoard(Integer boardId);
 
     Integer getSearchTotalCount(SearchBoardRequest boardRequest);
 
-    Integer createBoard(BoardFormRequest boardFormRequest);
+    Integer createBoard(Board board);
 
-    void updateBoard(BoardFormRequest boardFormRequest);
+    void updateBoard(Board board);
 
     void deleteBoard(Integer boardId);
 }

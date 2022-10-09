@@ -1,6 +1,7 @@
 package com.example.demo.controller.api;
 
 import com.example.demo.dto.request.BoardFormRequest;
+import com.example.demo.dto.response.BoardResponse;
 import com.example.demo.dto.response.Response;
 import com.example.demo.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +18,15 @@ public class BoardApiController {
 
     @PostMapping
     public Response<Integer> createBoard(@RequestBody BoardFormRequest boardFormRequest) {
-        boardService.createBoard(boardFormRequest);
-        return Response.success(boardFormRequest.getBoardId());
+//        BoardResponse boardResponse = BoardResponse.from(boardService.createBoard(boardFormRequest.toDto()));
+        Integer boardId = boardService.createBoard(boardFormRequest.toDto());
+        return Response.success(boardId);
     }
 
     @PutMapping("/{boardId}")
     public Response<Integer> updateBoard(@PathVariable Integer boardId, @RequestBody BoardFormRequest boardFormRequest) {
-        boardService.updateBoard(boardId, boardFormRequest);
-        return Response.success(boardId);
+        Integer updateBoardId = boardService.updateBoard(boardId, boardFormRequest.toDto());
+        return Response.success(updateBoardId);
     }
 
     @DeleteMapping("/{boardId}")

@@ -13,10 +13,14 @@ create table board
 create table comment
 (
     comment_id        INT AUTO_INCREMENT PRIMARY KEY,
+    board_id          INT          NOT NULL,
     comment           VARCHAR(100) NOT NULL,
     comment_user_name VARCHAR(10)  NOT NULL,
     comment_password  VARCHAR(20)  NOT NULL,
-    group_id          INT          NOT NULL,
-    depth             INT          NOT NULL,
-    FOREIGN KEY (comment_id) REFERENCES board (board_id)
+    ref               INT          NOT NULL,
+    step              INT          NOT NULL,
+    ref_order         INT          NOT NULL,
+    answer_num        INT          NOT NULL,
+    parent_num        INT          NOT NULL,
+    FOREIGN KEY (board_id) REFERENCES board (board_id)
 );

@@ -26,26 +26,26 @@ public class CommentApiController {
 
     @PostMapping
     public Response<Integer> createComment(@RequestBody CommentRequest commentRequest) {
-        commentService.createComment(commentRequest);
-        commentService.updateGroupId(commentRequest.getCommentId());
+        commentService.createComment(commentRequest.toDto());
         return Response.success(commentRequest.getBoardId());
     }
 
     @PutMapping("/{commentId}")
     public Response<Integer> updateComment(@PathVariable Integer commentId, @RequestBody CommentRequest commentRequest) {
-        commentService.updateComment(commentId, commentRequest);
+        commentService.updateComment(commentId, commentRequest.toDto());
         return Response.success(commentRequest.getBoardId());
     }
 
     @DeleteMapping("/{commentId}")
-    public Response<Integer> deleteComment(@PathVariable Integer commentId, @RequestBody CommentRequest commentRequest) {
-        commentService.deleteComment(commentId, commentRequest);
-        return Response.success(commentId);
+    public Response<List<Integer>> deleteComment(@PathVariable Integer commentId, @RequestBody CommentRequest commentRequest) {
+        List<Integer> deleteCommentId = commentService.deleteComment(commentId, commentRequest.getCommentPassword());
+        return Response.success(deleteCommentId);
     }
 
     @PostMapping("/{commentId}")
     public Response<Integer> reComment(@PathVariable Integer commentId, @RequestBody CommentRequest commentRequest) {
-        commentService.reComment(commentId, commentRequest);
+        log.info("commentRequest = {} ", commentRequest);
+        commentService.reComment(commentId, commentRequest.toDto());
         return Response.success(commentRequest.getBoardId());
     }
 }

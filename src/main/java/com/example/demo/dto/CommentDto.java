@@ -1,13 +1,11 @@
-package com.example.demo.dto.request;
+package com.example.demo.dto;
 
-import com.example.demo.dto.CommentDto;
-import lombok.AllArgsConstructor;
+import com.example.demo.model.Comment;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
-public class CommentRequest {
-
+public class CommentDto {
     private final Integer commentId;
     private final Integer boardId;
     private final String comment;
@@ -19,11 +17,24 @@ public class CommentRequest {
     private final Integer answerNum;
     private final Integer parentNum;
 
-    public CommentDto toDto() {
-        return CommentDto.builder()
+    @Builder
+    public CommentDto(Integer commentId, Integer boardId, String comment, String commentUserName, String commentPassword, Integer ref, Integer step, Integer refOrder, Integer answerNum, Integer parentNum) {
+        this.commentId = commentId;
+        this.boardId = boardId;
+        this.comment = comment;
+        this.commentUserName = commentUserName;
+        this.commentPassword = commentPassword;
+        this.ref = ref;
+        this.step = step;
+        this.refOrder = refOrder;
+        this.answerNum = answerNum;
+        this.parentNum = parentNum;
+    }
+
+    public Comment toEntity() {
+        return Comment.builder()
                 .commentId(this.commentId)
                 .boardId(this.boardId)
-                .comment(this.comment)
                 .commentUserName(this.commentUserName)
                 .commentPassword(this.commentPassword)
                 .ref(this.ref)
@@ -33,5 +44,4 @@ public class CommentRequest {
                 .parentNum(this.parentNum)
                 .build();
     }
-
 }

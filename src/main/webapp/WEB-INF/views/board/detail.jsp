@@ -22,7 +22,7 @@
 
 <main id="article-main" class="container">
     <header id="article-header" class="py-5 text-center">
-        <h1>${board.boardTitle}</h1>
+        <h1><strong>${board.boardTitle}</strong></h1>
     </header>
 
     <div class="row g-5">
@@ -38,7 +38,7 @@
         </section>
 
         <article id="boardContent" class="col-md-9 col-lg-8">
-            <pre>${board.boardContent}</pre>
+            <h3><pre>${board.boardContent}</pre></h3>
         </article>
     </div>
 
@@ -76,28 +76,39 @@
                 <c:forEach var="comment" items="${comments}">
                     <li id="li${comment.commentId}">
                         <div class="row">
-                            <div class="col-md-10 col-lg-6">
-                                <c:choose>
-                                    <c:when test="${comment.depth >0}">
-<%--                                        <c:forEach begin="0" end="${comment.depth}" step="1">--%>
-                                            <strong>
-                                                <c:forEach begin="0" end="${comment.depth}" step="1">
-                                                &nbsp
-                                                </c:forEach>
-                                                    ${comment.groupId}번의 답글  작성자 : ${comment.commentUserName}</strong>
-<%--                                        </c:forEach>--%>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <strong>${comment.commentId}번 댓글  작성자 : ${comment.commentUserName}</strong>
-                                    </c:otherwise>
-                                </c:choose>
-                                <p>${comment.comment}</p>
-                            </div>
-                            <div class="col-2 mb-3 align-self-center">
-                                <button type="button" class="btn btn-primary" onclick="reCommentForm(${comment.groupId}, ${comment.depth})">답글</button>
-                                <button type="button" class="btn btn-success me-md-2" onclick="updateFormComment('${comment.commentUserName}', '${comment.comment}', ${comment.commentId})">수정</button>
+                            <c:choose>
+                                <c:when test="${comment.step > 0}">
+                                    <div class="col-md-10 col-lg-8">
+                                        <strong>
+                                        <c:forEach begin="1" end="${comment.step}" step="1">
+                                            &rarr;
+                                        </c:forEach>
+                                                ${comment.commentId}번 댓글</strong></br>
+                                        <strong>
+                                            <c:forEach begin="1" end="${comment.step}" step="1">
+                                                &rarr;
+                                            </c:forEach>
+                                            작성자 : ${comment.commentUserName}</strong>
+                                        <p>
+                                            <c:forEach begin="1" end="${comment.step}" step="1">
+                                                &rarr;
+                                            </c:forEach>
+                                            댓글 내용 : ${comment.comment}</p>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="col-md-10 col-lg-8">
+                                        <strong>${comment.commentId}번 댓글</strong></br>
+                                        <strong>작성자 : ${comment.commentUserName}</strong>
+                                        <p>댓글 내용 : ${comment.comment}</p>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                            <div class="col-md-3 col-lg-4 ">
+                                <button type="button" class="btn btn-outline-primary" onclick="reCommentForm(${comment.commentId})">답글</button>
+                                <button type="button" class="btn btn-outline-success" onclick="updateFormComment('${comment.commentUserName}', '${comment.comment}', ${comment.commentId})">수정</button>
                                 <button type="button" class="btn btn-outline-danger" onclick="deleteComment(${comment.commentId}, ${board.boardId}, ${page})">삭제</button>
-                            </div>
+                             </div>
                         </div>
                         <div id="updateDiv${comment.commentId}">
                         </div>

@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dao.BoardDAO;
+import com.example.demo.dto.BoardDto;
 import com.example.demo.dto.request.SearchBoardRequest;
 import com.example.demo.dto.request.BoardFormRequest;
 import com.example.demo.dto.response.BoardResponse;
@@ -21,41 +22,41 @@ public class BoardService {
 
     private final BoardDAO boardDAO;
 
-    public List<BoardResponse> boards(SearchBoardRequest boardRequest) {
-        return boardDAO.boards(boardRequest).stream().map(BoardResponse::from).collect(Collectors.toList());
+    public List<BoardDto> boards(SearchBoardRequest boardRequest) {
+        return boardDAO.boards(boardRequest).stream().map(BoardDto::from).collect(Collectors.toList());
     }
 
-    public BoardResponse getBoard(Integer boardId) {
-        Board board = boardDAO.getBoard(boardId);
-        if (board == null) {
-            throw new BoardException(ErrorCode.BOARD_NOT_FOUND, String.format("%s번 게시글을 찾을 수 없습니다.", boardId));
-        }
-        return BoardResponse.from(boardDAO.getBoard(boardId));
+    public BoardDto getBoard(Integer boardId) {
+        Board board = boardDAO.getBoard(boardId).orElseThrow(() -> new BoardException(ErrorCode.BOARD_NOT_FOUND, String.format("%s번 게시글을 찾을 수 없습니다.", boardId)));
+
+        return BoardDto.from(board);
     }
 
     public Integer getSearchTotalCount(SearchBoardRequest boardRequest) {
         return boardDAO.getSearchTotalCount(boardRequest);
     }
 
-    public Integer createBoard(BoardFormRequest boardFormRequest) {
-        return boardDAO.createBoard(boardFormRequest);
+    public Integer createBoard(BoardDto boardDto) {
+        Integer boardId = boardDAO.createBoard(boardDto.toEntity());
+        return boardId;
+
     }
 
-    public void updateBoard(Integer boardId, BoardFormRequest boardFormRequest) {
-        Board board = boardDAO.getBoard(boardId);
-//        if (board == null) {
-//            throw new BoardException(ErrorCode.BOARD_NOT_FOUND, String.format("%s번 게시글을 찾을 수 없습니다.", boardId));
-//        }
-        if (!board.getBoardPassword().equals(boardFormRequest.getBoardPassword())) {
+    public Integer updateBoard(Integer boardId, BoardDto boardDto) {
+        Board board = boardDAO.getBoard(boardId).orElseThrow(() -> new BoardException(ErrorCode.BOARD_NOT_FOUND, String.format("%s번 게시글을 찾을 수 없습니다.", boardId)));
+
+        if (!board.getBoardPassword().equals(boardDto.getBoardPassword())) {
             log.info("boardPassword {} ", board.getBoardPassword());
-            log.info("requestPassword {} ", boardFormRequest.getBoardPassword());
-            throw new BoardException(ErrorCode.INVALID_PASSWORD, String.format("%s은 틀린 패스워드 입니다.", boardFormRequest.getBoardPassword()));
+            log.info("requestPassword {} ", boardDto.getBoardPassword());
+            throw new BoardException(ErrorCode.INVALID_PASSWORD, String.format("%s은 틀린 패스워드 입니다.", boardDto.getBoardPassword()));
         }
-        boardDAO.updateBoard(boardFormRequest);
+        boardDAO.updateBoard(boardDto.toEntity());
+        return board.getBoardId();
     }
 
     public void deleteBoard(Integer boardId, String inputPassword) {
-        Board board = boardDAO.getBoard(boardId);
+        Board board = boardDAO.getBoard(boardId).orElseThrow(() -> new BoardException(ErrorCode.BOARD_NOT_FOUND, String.format("%s번 게시글을 찾을 수 없습니다.", boardId)));
+
         if (!board.getBoardPassword().equals(inputPassword)) {
             log.info("boardPassword {} ", board.getBoardPassword());
             log.info("requestPassword {} ", inputPassword);

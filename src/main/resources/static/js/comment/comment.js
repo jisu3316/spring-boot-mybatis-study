@@ -93,7 +93,7 @@ function reCommentForm(commentId, depth) {
                 </div>
                 <div class="col-md-3 col-lg-5">
                     <label for="comment-submit" hidden>댓글 쓰기</label>
-                    <button class="btn btn-primary" id="comment-submit" type="button" onclick="reComment(${commentId}, ${depth})">답글 달기</button>
+                    <button class="btn btn-primary" id="comment-submit" type="button" onclick="reComment(${commentId})">답글 달기</button>
                 </div> 
             `;
 
@@ -106,7 +106,7 @@ function reCommentForm(commentId, depth) {
     }
 }
 
-function reComment(commentId, depth) {
+function reComment(commentId) {
     let boardId = document.getElementById('boardId').value;
     let userName = document.getElementById('reCommentUserName').value.trim();
     let userPassword = document.getElementById('reCommentPassword').value.trim();
@@ -118,7 +118,7 @@ function reComment(commentId, depth) {
             url: "/api/comment/" + commentId,
             type: "POST",
             dataType: "json",
-            data: JSON.stringify({"boardId" : boardId, "commentId" : commentId, "commentUserName" : userName,"commentPassword" : userPassword, "comment" : comment, "groupId" : commentId, "depth" : depth}),
+            data: JSON.stringify({"boardId" : boardId, "commentId" : commentId, "commentUserName" : userName,"commentPassword" : userPassword, "comment" : comment, "groupId" : commentId}),
             contentType: "application/json",
             success: function (data) {
                 console.log("data: ", data);
@@ -152,7 +152,7 @@ function updateFormComment(userName, comment, commentId) {
                 </div>
                 <div class="col-md-3 col-lg-5">
                     <label for="comment-submit" hidden>댓글 쓰기</label>
-                    <button class="btn btn-primary" id="comment-submit" type="button" onclick="updateComment(${commentId})">댓글 수정</button>
+                    <button class="btn btn-success" id="comment-submit" type="button" onclick="updateComment(${commentId})">댓글 수정</button>
                 </div> 
             `;
 
@@ -204,11 +204,10 @@ function deleteComment(commentId, boardId, page) {
         data: JSON.stringify({"commentId" : commentId, "boardId" : boardId, "commentPassword" : inputPassword}),
         contentType: "application/json",
         success: function (data) {
-            // location.href = "/view/board/" + boardId + "?page=" + page;
-            console.log(data.result);
-            let liId = 'li' + data.result;
-            console.log("liId: " +liId);
-            document.getElementById(liId).remove();
+            for (let i = 0; i < data.result.length; i++) {
+                let liId = 'li' + data.result[i];
+                document.getElementById(liId).remove();
+            }
         },
         error: function (request, status, error) {
             let err = JSON.parse(request.responseText);

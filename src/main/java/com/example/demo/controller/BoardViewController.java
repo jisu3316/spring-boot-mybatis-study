@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 
 import com.example.demo.dto.request.SearchBoardRequest;
+import com.example.demo.dto.response.BoardResponse;
 import com.example.demo.service.BoardService;
 import com.example.demo.service.CommentService;
 import com.example.demo.service.PaginationService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -32,13 +34,11 @@ public class BoardViewController {
         log.info("searchValue : {}", boardRequest.getSearchValue());
         log.info("startDate : {}", boardRequest.getStartDate());
         log.info("endDate : {}", boardRequest.getEndDate());
-        System.out.println("boardRequest = " + boardRequest.getEndDate());
-//        log.info("total {}" , boardService.getTotalCount());
 
         Integer searchTotalCount = boardService.getSearchTotalCount(boardRequest);
 
         List<Integer> paginationBarNumbers = paginationService.getPaginationBarNumbers(boardRequest.getPage(), searchTotalCount);
-        model.addAttribute("boards", boardService.boards(boardRequest));
+        model.addAttribute("boards", boardService.boards(boardRequest).stream().map(BoardResponse::from).collect(Collectors.toList()));
         model.addAttribute("search", boardRequest);
         model.addAttribute("page", boardRequest.getPage());
         model.addAttribute("paginationBarNumbers", paginationBarNumbers);
@@ -55,7 +55,7 @@ public class BoardViewController {
     @GetMapping("/{boardId}")
     public String getBoard(@PathVariable Integer boardId, Model model, Integer page) {
         model.addAttribute("comments", commentService.getComments(boardId));
-        model.addAttribute("board", boardService.getBoard(boardId));
+        model.addAttribute("board", BoardResponse.from(boardService.getBoard(boardId)));
         model.addAttribute("page", page);
         return "board/detail";
     }

@@ -1,26 +1,37 @@
 package com.example.demo.dao;
 
-import com.example.demo.dto.request.CommentRequest;
 import com.example.demo.model.Comment;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Mapper
 public interface CommentDAO {
 
     List<Comment> comments(Integer boardId);
 
-    void createComment(CommentRequest commentRequest);
+    void createComment(Comment comment);
 
-    void updateGroupId(Integer commentId);
+    void updateComment(Comment comment);
 
-    void updateComment(Map<String, Object> map);
+    Optional<Comment> getComment(Integer commentId);
 
-    Comment getComment(Integer commentId);
+    void deleteComment(Comment comment);
 
-    void deleteComment(Integer commentId);
+    void deleteCommentAndRef(Integer boardId, Integer ref);
 
-    void reComment(CommentRequest commentRequest);
+    List<Integer> findByDeleteCommentId(Integer boardId, Integer ref);
+
+    void reComment(Comment comment);
+
+    Integer refIfNull(Integer boardId);
+
+    Integer findBySumAnswerNum(Integer ref);
+
+    Integer findByNvlMaxStep(Integer ref);
+
+    void updateRefOrderPlus(Integer ref, Integer refOrder, Integer boardId);
+
+    void updateAnswerNum(Integer commentId, Integer answerNum);
 }

@@ -3,33 +3,65 @@
 <mapper namespace="com.example.demo.dao.CommentDAO">
 
     <select id="comments" resultType="Comment" >
-        select * from comment where board_id = #{boardId} order by group_id desc ,depth
+        select * from comment where board_id = #{boardId} order by ref desc ,ref_order asc
     </select>
 
     <select id="getComment" resultType="Comment">
         select * from comment where comment_id = #{commentId}
     </select>
 
-    <insert id="createComment" parameterType="com.example.demo.dto.request.CommentRequest" useGeneratedKeys="true" keyProperty="commentId" keyColumn="comment_id">
-        insert into comment(board_id, comment, comment_user_name, comment_password, group_id, depth)
-                values (#{boardId}, #{comment}, #{commentUserName}, #{commentPassword}, 0 , 0)
+    <select id="refIfNull" resultType="Integer">
+        select ifnull(max(ref),0) +1 from comment WHERE board_id = #{boardId}
+    </select>
+
+    <select id="findBySumAnswerNum" resultType="Integer">
+        select SUM(answer_num) from comment WHERE ref = #{ref};
+    </select>
+
+    <select id="findByNvlMaxStep" resultType="Integer">
+        select MAX(step) from comment WHERE ref = #{ref}
+    </select>
+
+    <update id="updateRefOrderPlus" parameterType="Integer">
+        UPDATE comment SET ref_order = ref_order + 1 WHERE ref = #{ref} AND ref_order > #{refOrder} and board_id = #{boardId}
+    </update>
+
+    <update id="updateAnswerNum" parameterType="Integer">
+        UPDATE comment SET answer_num = #{answerNum}  + 1  WHERE comment_id = #{commentId}
+    </update>
+
+    <insert id="createComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="commentId" keyColumn="comment_id">
+        insert into comment(board_id, comment, comment_user_name, comment_password, ref, step, ref_order, answer_num, parent_num)
+                values (#{boardId}, #{comment}, #{commentUserName}, #{commentPassword}, #{ref} , #{step}, #{refOrder}, #{answerNum}, #{parentNum})
     </insert>
 
     <insert id="reComment" parameterType="com.example.demo.dto.request.CommentRequest" >
-        insert into comment(board_id, comment, comment_user_name, comment_password, group_id, depth)
-        values (#{boardId}, #{comment}, #{commentUserName}, #{commentPassword}, #{groupId} , #{depth} + 1)
+        insert into comment(board_id, comment, comment_user_name, comment_password, ref, step, ref_order, answer_num, parent_num)
+        values (#{boardId}, #{comment}, #{commentUserName}, #{commentPassword}, #{ref} , #{step}, #{refOrder}, #{answerNum}, #{parentNum})
     </insert>
 
     <update id="updateGroupId" parameterType="Integer">
         update comment set group_id = #{commentId} where comment_id = #{commentId}
     </update>
 
-    <update id="updateComment" parameterType="map">
+    <update id="updateComment" parameterType="Comment">
         update comment set comment = #{comment} where comment_id = #{commentId}
     </update>
 
-    <delete id="deleteComment" parameterType="Integer">
+    <select id="commentRef">
+        select comment_id from comment where board_id = #{boardId} and
+    </select>
+
+    <delete id="deleteComment" parameterType="Comment">
         delete from comment where comment_id = #{commentId}
     </delete>
+
+    <delete id="deleteCommentAndRef" parameterType="Integer">
+        delete from comment where board_id = #{boardId} and ref = #{ref}
+    </delete>
+
+    <select id="findByDeleteCommentId" parameterType="Integer" resultType="Integer">
+        SELECT comment_id from comment where board_id = #{boardId} and ref = #{ref};
+    </select>
 </mapper>
 

@@ -69,7 +69,7 @@
         </choose>
     </select>
 
-    <insert id="createBoard" parameterType="com.example.demo.dto.request.BoardFormRequest" useGeneratedKeys="true"
+    <insert id="createBoard" parameterType="Board" useGeneratedKeys="true"
             keyProperty="boardId" keyColumn="board_id">
         insert into board(board_title, board_content, board_user_name, board_password, create_at, delete_YN)
         values (#{boardTitle}, #{boardContent}, #{boardUserName}, #{boardPassword}, now(), default)

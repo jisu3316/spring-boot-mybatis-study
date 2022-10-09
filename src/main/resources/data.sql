@@ -21,3 +21,16 @@ values
     (0, '제목19', '내용19', '김지수', 1234, now(), default),
     (0, '제목20', '내용20', '김지수', 1234, now(), default),
     (0, '제목21', '내용21', '김지수', 1234, now(), default);
+
+INSERT into comment values(0, 20, '댓글1', '김지수', '1234', 1, 0, 0, 0, 0);
+INSERT into comment values(0, 21, '댓글2', '김지수2', '1234', 2, 0, 0, 0, 0);
+INSERT into comment values(0, 21, '댓글3', '김지수3', '1234', 3, 0, 0, 0, 0);
+
+INSERT into comment values(0, 21, '댓글2의 댓글1', '김지수3', '1234', 2, 1, 1, 1, 2);
+INSERT into comment values(0, 21, '댓글2의 댓글2', '김지수3', '1234', 2, 1, 5, 0, 2);
+INSERT into comment values(0, 21, '댓글2의 댓글3', '김지수3', '1234', 2, 1, 6, 0, 2);
+
+
+INSERT into comment values(0, 21, '댓글2 댓글1의 댓글 1', '김지수3', '1234', 2, 2, 2, 1, 5);
+INSERT into comment values(0, 21, '댓글2의 댓글1의 댓글1의 댓글1', '김지수3', '1234', 2, 3, 3, 1, 8);
+INSERT into comment values(0, 21, '댓글2의 댓글1의 댓글1의 댓글1의 댓글1', '김지수3', '1234', 2, 4, 4, 0, 9);
