@@ -292,7 +292,7 @@ function createElement(data) {
     let ul = document.getElementById('board-comments');
     while ( ul.hasChildNodes() )
     {
-        console.log("while in ul.hasChildNodes(): "+ ul.hasChildNodes());
+        // console.log("while in ul.hasChildNodes(): "+ ul.hasChildNodes());
         ul.removeChild( ul.firstChild );
     }
     for (let i = 0; i < data.result.length; i++) {
@@ -319,7 +319,7 @@ function createElement(data) {
                 arrow += "&rarr;";
             }
             let commentIndex = i + 1;
-            strong1.innerHTML = arrow + commentIndex + "\n";
+            strong1.innerHTML = arrow + commentIndex + "</br>";
         } else {
             strong1.innerText = i +1 + "\n";
         }
@@ -330,7 +330,7 @@ function createElement(data) {
         if (data.result[i].step > 0) {
             let nbsp = '';
             for (let j = 0; j < data.result[i].step; j++) {
-                nbsp += "&nbsp;&nbsp;&nbsp";
+                nbsp += "&nbsp;";
             }
             strong2.innerHTML = nbsp + "작성자 : " + data.result[i].commentUserName ;
         } else {
@@ -343,7 +343,7 @@ function createElement(data) {
         if (data.result[i].step > 0) {
             let nbsp = '';
             for (let j = 0; j < data.result[i].step; j++) {
-                nbsp += "&nbsp;&nbsp;&nbsp";
+                nbsp += "&nbsp;";
             }
             p.innerHTML = nbsp + "댓글 내용 : " + data.result[i].comment;
         } else {
