@@ -17,7 +17,7 @@ public interface CommentDAO {
 
     Optional<Comment> getComment(Integer commentId);
 
-    void deleteComment(Comment comment);
+    void deleteComment(Integer commentId);
 
     void deleteCommentAndRef(Integer boardId, Integer ref);
 
@@ -27,9 +27,9 @@ public interface CommentDAO {
 
     Integer refIfNull(Integer boardId);
 
-    Integer findBySumAnswerNum(Integer ref);
+    Integer findBySumAnswerNum(Integer ref, Integer boardId);
 
-    Integer findByNvlMaxStep(Integer ref);
+    Integer findByNvlMaxStep(Integer ref, Integer boardId);
 
     void updateRefOrderPlus(Integer ref, Integer refOrder, Integer boardId);
 

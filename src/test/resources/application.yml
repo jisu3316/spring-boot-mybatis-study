@@ -1,24 +1,10 @@
-
 spring:
   datasource:
     url: jdbc:h2:mem:test
     username: sa
     password:
     driver-class-name: org.h2.Driver
-#  jpa:
-#    hibernate:
-#      ddl-auto: create #create update none
-#    properties:
-#      hibernate:
-#        show_sql: true
-#        format_sql: true
-#  thymeleaf3:
-#    decoupled-logic: true
-#  profiles:
-#    include: oauth
-#
-#file:
-#  dir: C:/Users/kjs76/Desktop/jisu/file/
+
 logging:
   level:
     org.hibernate.sql: debug

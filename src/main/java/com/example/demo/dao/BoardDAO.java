@@ -1,10 +1,8 @@
 package com.example.demo.dao;
 
 import com.example.demo.dto.request.SearchBoardRequest;
-import com.example.demo.dto.request.BoardFormRequest;
 import com.example.demo.model.Board;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;

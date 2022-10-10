@@ -15,11 +15,11 @@
     </select>
 
     <select id="findBySumAnswerNum" resultType="Integer">
-        select SUM(answer_num) from comment WHERE ref = #{ref};
+        select SUM(answer_num) from comment WHERE ref = #{ref} and board_id = #{boardId};
     </select>
 
     <select id="findByNvlMaxStep" resultType="Integer">
-        select MAX(step) from comment WHERE ref = #{ref}
+        select MAX(step) from comment WHERE ref = #{ref} and board_id = #{boardId}
     </select>
 
     <update id="updateRefOrderPlus" parameterType="Integer">
@@ -52,7 +52,7 @@
         select comment_id from comment where board_id = #{boardId} and
     </select>
 
-    <delete id="deleteComment" parameterType="Comment">
+    <delete id="deleteComment" parameterType="Integer">
         delete from comment where comment_id = #{commentId}
     </delete>
 

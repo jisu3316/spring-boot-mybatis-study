@@ -11,7 +11,6 @@ function createBoard(page) {
             data: JSON.stringify({"boardTitle" : boardTitle, "boardContent" : boardContent, "boardUserName" : boardUserName, "boardPassword" : boardPassword}),
             contentType: "application/json",
             success: function (data) {
-                console.log("data: ", data);
                 location.href = "/view/board/" + data.result + "?page=" + page;
 
             },
@@ -38,10 +37,8 @@ function updateBoard(page) {
             data: JSON.stringify({"boardId": boardId, "boardTitle" : boardTitle, "boardContent" : boardContent, "boardUserName" : boardUserName, "boardPassword" : boardPassword}),
             contentType: "application/json",
             success: function (data) {
-                console.log("data: ", data);
                 location.href = "/view/board/" + data.result + "?page=" + page;
                 // alert(data.result.boardId);
-                // console.log(data);
             },
             error: function (request, status, error) {
                 let err = JSON.parse(request.responseText);
@@ -56,7 +53,6 @@ function updateBoard(page) {
 function deleteBoard(boardId) {
     let inputPassword = prompt('비밀번호를 입력하세요');
     inputPassword.trim();
-    console.log(boardId);
     $.ajax({
         url: "/api/board/" + boardId,
         type: "DELETE",
@@ -64,12 +60,10 @@ function deleteBoard(boardId) {
         data: JSON.stringify({"boardPassword" : inputPassword}),
         contentType: "application/json",
         success: function (data) {
-            console.log("data: ", data);
             location.href="/view/board"
         },
         error: function (request, status, error) {
             let err = JSON.parse(request.responseText);
-            console.log(err);
             alert(err.resultMessage)
             document.getElementById('boardPassword').focus();
         }
@@ -80,18 +74,15 @@ function searchButton() {
     let langSelect = document.getElementById("search-type");
     let selectValue = langSelect.options[langSelect.selectedIndex].value;
     let searchValue = document.getElementById("search-value").value.trim();
-    console.log("selectValue= ",selectValue, ", searchValue= ", searchValue, )
 
     if (selectValue === 'createAt') {
         let startDate = document.getElementById("startDate").value.trim();
         let endDate = document.getElementById("endDate").value.trim();
         if (!startDate) {
             startDate = 'startDate';
-            console.log("startDate null일때 selectValue= ", selectValue, ", searchValue= ", searchValue, ", startDate= ", startDate, ", endDate= ", endDate);
         }
         if (!endDate) {
             endDate = 'endDate';
-            console.log("endDate null일때 selectValue= ", selectValue, ", searchValue= ", searchValue, ", startDate= ", startDate, ", endDate= ", endDate);
         }
         location.href="/view/board?searchType=" + selectValue + "&startDate=" + startDate + "&endDate=" + endDate + "&searchValue=" + searchValue;
     } else {
@@ -105,13 +96,10 @@ function changeType(){
 
     // select element에서 선택된 option의 value가 저장된다.
     let selectValue = langSelect.options[langSelect.selectedIndex].value;
-    console.log(selectValue);
     // select element에서 선택된 option의 text가 저장된다.
     let selectText = langSelect.options[langSelect.selectedIndex].text;
-    console.log(selectText);
 
     if (selectValue === 'createAt') {
-        console.log("createAt 선택");
 
         let date1 = document.getElementById('date1');
         date1.innerHTML="<label id=\"label1\"for=\"startDate\" >검색 시작 날짜</label>";

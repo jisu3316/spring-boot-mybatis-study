@@ -1,43 +1,14 @@
 function getComments(boardId) {
-    console.log(boardId);
     $.ajax({
         url: "/api/comment/" + boardId,
         type: "GET",
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
-            location.href="/view/board/"+data.result[0].boardId;
-            console.log("data: ", data);
-            // console.log("data.length: ", data.result.length);
-            // let ul = document.getElementById('board-comments');
-            // // 자식 노드 삭제
-            // // while(ul.firstChild)  {
-            // //     ul.firstChild.remove();
-            // // }
-            // while ( ul.hasChildNodes() )
-            // {
-            //     ul.removeChild( ul.firstChild );
-            // }
-            // const tagList = [];
-            // data.result.forEach((result) =>{
-            //     tagList.push(`
-            //         <li id="li${result.commentId}">
-            //             <div  class="row">
-            //                 <div class="col-md-10 col-lg-9">
-            //                     <p>${result.comment}</p>
-            //                 </div>
-            //                 <div class="col-2 mb-3 align-self-center">
-            //                     <button type="button" class="btn btn-primary" onclick="reCommentForm(${result.commentId}, ${result.depth})">답글</button>
-            //                     <button type="button" class="btn btn-success me-md-2" onclick="updateFormComment('${result.commentUserName}', '${result.comment}', ${result.commentId})">수정</button>
-            //                     <button type="button" class="btn btn-outline-danger" onclick="deleteComment(${result.commentId}, ${result.boardId})">삭제</button>
-            //                 </div>
-            //             </div>
-            //         </li>
-            //         <div id="updateDiv${result.commentId}">
-            //         </div>
-            //     `)
-            // });
-            // ul.innerHTML = tagList;
+            // location.href="/view/board/"+data.result[0].boardId;
+
+           createElement(data);
+
         },
         error: function (request, status, error) {
             let err = JSON.parse(request.responseText);
@@ -51,7 +22,6 @@ function postComment() {
     let userName = document.getElementById('userName').value.trim();
     let userPassword = document.getElementById('userPassword').value.trim();
     let comment = document.getElementById('comment').value.trim();
-    console.log("boardId= "+ boardId + ", userName= " + userName + ", userPassword= " + userPassword + ", comment= " + comment);
 
     if (postCommentValid(userName, userPassword, comment)) {
         $.ajax({
@@ -61,7 +31,6 @@ function postComment() {
             data: JSON.stringify({"boardId" : boardId, "commentUserName" : userName, "commentPassword" : userPassword, "comment" : comment}),
             contentType: "application/json",
             success: function (data) {
-                console.log("data: ", data);
                 getComments(data.result);
                 document.getElementById('userName').value = '';
                 document.getElementById('userPassword').value = '';
@@ -111,7 +80,6 @@ function reComment(commentId) {
     let userName = document.getElementById('reCommentUserName').value.trim();
     let userPassword = document.getElementById('reCommentPassword').value.trim();
     let comment = document.getElementById('reCommentComment').value.trim();
-    console.log("boardId= "+ boardId + ", userPassword= " + userPassword + ", comment= " + comment);
 
     if (reCommentValid(userName, userPassword, comment)) {
         $.ajax({
@@ -121,7 +89,6 @@ function reComment(commentId) {
             data: JSON.stringify({"boardId" : boardId, "commentId" : commentId, "commentUserName" : userName,"commentPassword" : userPassword, "comment" : comment, "groupId" : commentId}),
             contentType: "application/json",
             success: function (data) {
-                console.log("data: ", data);
                 getComments(data.result);
                 document.getElementById('userName').value = '';
                 document.getElementById('userPassword').value = '';
@@ -170,7 +137,6 @@ function updateComment(commentId) {
     // let userName = document.getElementById('updateUserName').value.trim();
     let userPassword = document.getElementById('updateUserPassword').value.trim();
     let comment = document.getElementById('updateComment').value.trim();
-    console.log("boardId= "+ boardId + ", userPassword= " + userPassword + ", comment= " + comment);
 
     if (updateCommentValid(userPassword, comment)) {
         $.ajax({
@@ -180,7 +146,6 @@ function updateComment(commentId) {
             data: JSON.stringify({"boardId" : boardId, "commentId" : commentId, "commentPassword" : userPassword, "comment" : comment}),
             contentType: "application/json",
             success: function (data) {
-                console.log("data: ", data);
                 getComments(data.result);
                 document.getElementById('userName').value = '';
                 document.getElementById('userPassword').value = '';
@@ -321,4 +286,95 @@ function reCommentValid(userName, userPassword, comment){
         return false;
     }
     return true;
+}
+
+function createElement(data) {
+    let ul = document.getElementById('board-comments');
+    while ( ul.hasChildNodes() )
+    {
+        console.log("while in ul.hasChildNodes(): "+ ul.hasChildNodes());
+        ul.removeChild( ul.firstChild );
+    }
+    for (let i = 0; i < data.result.length; i++) {
+        let li = document.createElement("li");
+        let liId = 'li' + data.result[i].commentId;
+        li.setAttribute('id', liId);
+        ul.appendChild(li);
+
+        let liById = document.getElementById(liId);
+        let rowDiv = document.createElement('div');
+        rowDiv.setAttribute('class', 'row');
+        liById.append(rowDiv);
+
+        let commentDiv1 = document.createElement("div");
+        commentDiv1.setAttribute("class", "col-md-10 col-lg-8");
+        rowDiv.append(commentDiv1);
+
+
+        let strong1 = document.createElement("strong");
+        commentDiv1.append(strong1);
+        if (data.result[i].step > 0) {
+            let arrow = '';
+            for (let j = 0; j < data.result[i].step; j++) {
+                arrow += "&rarr;";
+            }
+            let commentIndex = i + 1;
+            strong1.innerHTML = arrow + commentIndex + "\n";
+        } else {
+            strong1.innerText = i +1 + "\n";
+        }
+
+
+        let strong2 = document.createElement("strong");
+        commentDiv1.append(strong2);
+        if (data.result[i].step > 0) {
+            let nbsp = '';
+            for (let j = 0; j < data.result[i].step; j++) {
+                nbsp += "&nbsp;&nbsp;&nbsp";
+            }
+            strong2.innerHTML = nbsp + "작성자 : " + data.result[i].commentUserName ;
+        } else {
+            strong2.innerText = "작성자 : " + data.result[i].commentUserName ;
+        }
+
+
+        let p = document.createElement('p');
+        commentDiv1.append(p);
+        if (data.result[i].step > 0) {
+            let nbsp = '';
+            for (let j = 0; j < data.result[i].step; j++) {
+                nbsp += "&nbsp;&nbsp;&nbsp";
+            }
+            p.innerHTML = nbsp + "댓글 내용 : " + data.result[i].comment;
+        } else {
+            p.innerText = "댓글 내용 : " + data.result[i].comment;
+        }
+
+        let buttonDiv = document.createElement('div');
+        buttonDiv.setAttribute('class', 'col-md-3 col-lg-4');
+        rowDiv.append(buttonDiv);
+
+        let reCommentButton = document.createElement('button');
+        reCommentButton.setAttribute('class', 'btn btn-outline-primary');
+        reCommentButton.setAttribute('onclick', 'reCommentForm('+ data.result[i].commentId+')');
+        reCommentButton.innerHTML = "답글";
+        buttonDiv.append(reCommentButton);
+
+        let updateButton = document.createElement('button');
+        updateButton.setAttribute('class', 'btn btn-outline-success');
+        updateButton.setAttribute('onclick', "updateFormComment('"+ data.result[i].commentUserName + "', '" + data.result[i].comment + "', " + data.result[i].commentId + ")");
+        updateButton.innerHTML = "수정";
+        buttonDiv.append(updateButton);
+
+        let deleteButton = document.createElement('button');
+        deleteButton.setAttribute('class', 'btn btn-outline-danger');
+        deleteButton.setAttribute('onclick', 'deleteComment('+ data.result[i].commentId + ', ' + data.result.boardId + ')');
+        deleteButton.innerHTML = "삭제";
+        buttonDiv.append(deleteButton);
+
+
+        let updateDiv = document.createElement('div');
+        updateDiv.setAttribute('id', 'updateDiv' + data.result[i].commentId);
+        liById.append(updateDiv);
+    }
 }

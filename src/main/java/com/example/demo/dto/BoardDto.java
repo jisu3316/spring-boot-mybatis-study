@@ -1,6 +1,5 @@
 package com.example.demo.dto;
 
-import com.example.demo.dto.response.BoardResponse;
 import com.example.demo.model.Board;
 import lombok.Builder;
 import lombok.Data;

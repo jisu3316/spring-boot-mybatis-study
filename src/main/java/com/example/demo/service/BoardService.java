@@ -3,8 +3,6 @@ package com.example.demo.service;
 import com.example.demo.dao.BoardDAO;
 import com.example.demo.dto.BoardDto;
 import com.example.demo.dto.request.SearchBoardRequest;
-import com.example.demo.dto.request.BoardFormRequest;
-import com.example.demo.dto.response.BoardResponse;
 import com.example.demo.exception.BoardException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.model.Board;

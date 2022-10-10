@@ -73,7 +73,7 @@
             </form>
 
             <ul id="board-comments" class="row col-md-10 col-lg-8 pt-3">
-                <c:forEach var="comment" items="${comments}">
+                <c:forEach var="comment" items="${comments}" varStatus="status">
                     <li id="li${comment.commentId}">
                         <div class="row">
                             <c:choose>
@@ -83,22 +83,22 @@
                                         <c:forEach begin="1" end="${comment.step}" step="1">
                                             &rarr;
                                         </c:forEach>
-                                                ${comment.commentId}번 댓글</strong></br>
+                                                ${status.index + 1} </strong></br>
                                         <strong>
                                             <c:forEach begin="1" end="${comment.step}" step="1">
-                                                &rarr;
+                                                &nbsp;&nbsp;&nbsp;
                                             </c:forEach>
                                             작성자 : ${comment.commentUserName}</strong>
                                         <p>
                                             <c:forEach begin="1" end="${comment.step}" step="1">
-                                                &rarr;
+                                                &nbsp;&nbsp;&nbsp;
                                             </c:forEach>
                                             댓글 내용 : ${comment.comment}</p>
                                     </div>
                                 </c:when>
                                 <c:otherwise>
                                     <div class="col-md-10 col-lg-8">
-                                        <strong>${comment.commentId}번 댓글</strong></br>
+                                        <strong>${status.index + 1}</strong></br>
                                         <strong>작성자 : ${comment.commentUserName}</strong>
                                         <p>댓글 내용 : ${comment.comment}</p>
                                     </div>
@@ -107,7 +107,7 @@
                             <div class="col-md-3 col-lg-4 ">
                                 <button type="button" class="btn btn-outline-primary" onclick="reCommentForm(${comment.commentId})">답글</button>
                                 <button type="button" class="btn btn-outline-success" onclick="updateFormComment('${comment.commentUserName}', '${comment.comment}', ${comment.commentId})">수정</button>
-                                <button type="button" class="btn btn-outline-danger" onclick="deleteComment(${comment.commentId}, ${board.boardId}, ${page})">삭제</button>
+                                <button type="button" class="btn btn-outline-danger" onclick="deleteComment(${comment.commentId}, ${board.boardId})">삭제</button>
                              </div>
                         </div>
                         <div id="updateDiv${comment.commentId}">

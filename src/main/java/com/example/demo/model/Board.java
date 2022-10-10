@@ -1,10 +1,10 @@
 package com.example.demo.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 public class Board {
@@ -32,5 +32,18 @@ public class Board {
         this.boardPassword = boardPassword;
         this.createAt = createAt;
         this.deleteYN = deleteYN;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Board)) return false;
+        Board board = (Board) o;
+        return getBoardId() != null && getBoardId().equals(board.getBoardId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBoardId());
     }
 }

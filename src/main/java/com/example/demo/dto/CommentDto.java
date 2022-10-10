@@ -35,6 +35,7 @@ public class CommentDto {
         return Comment.builder()
                 .commentId(this.commentId)
                 .boardId(this.boardId)
+                .comment(this.comment)
                 .commentUserName(this.commentUserName)
                 .commentPassword(this.commentPassword)
                 .ref(this.ref)

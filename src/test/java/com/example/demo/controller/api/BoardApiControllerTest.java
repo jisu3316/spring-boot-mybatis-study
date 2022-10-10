@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("뷰 컨트롤러 테스트")
+@DisplayName("Board Api 컨트롤러 테스트")
 @WebMvcTest(BoardApiController.class)
 class BoardApiControllerTest {
 
@@ -37,13 +37,16 @@ class BoardApiControllerTest {
     @Test
     void 게시글작성() throws Exception {
         // given
-
+        Integer boardId = 1;
+        BoardDto boardDto = createBoardDto();
+        given(boardService.createBoard(boardDto)).willReturn(boardId);
         // when & then
         mvc.perform(post("/api/board")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(createBoardFormRequest()))
         ).andDo(print())
          .andExpect(status().isOk());
+        then(boardService).should().createBoard(boardDto);
     }
 
     @DisplayName("[PUT] - 게시글 수정")
@@ -76,6 +79,7 @@ class BoardApiControllerTest {
                         .content(objectMapper.writeValueAsBytes(boardFormRequest))
                 ).andDo(print())
                 .andExpect(status().isOk());
+        then(boardService).should().deleteBoard(boardId, createBoardFormRequest().getBoardPassword());
     }
 
     private Board createBoard() {

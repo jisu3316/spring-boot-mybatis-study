@@ -9,7 +9,6 @@ import com.example.demo.exception.ErrorCode;
 import com.example.demo.model.Comment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.javassist.runtime.Inner;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class CommentService {
     public List<Integer> deleteComment(Integer commentId, String password) {
         Comment comment = commentDAO.getComment(commentId).orElseThrow(() ->
                 new BoardException(ErrorCode.COMMENT_NOT_FOUND, String.format("%s COMMENT_NOT_FOUND", commentId)));
-        List<Integer> list = null;
+        List<Integer> list = new ArrayList<>();
         if (!comment.getCommentPassword().equals(password)) {
             log.info("boardPassword {} ", comment.getCommentPassword());
             log.info("requestPassword {} ", password);
@@ -73,8 +72,8 @@ public class CommentService {
             list = commentDAO.findByDeleteCommentId(comment.getBoardId(), comment.getRef());
             commentDAO.deleteCommentAndRef(comment.getBoardId(), comment.getRef());
         } else {
-            commentDAO.deleteComment(comment);
             list.add(comment.getCommentId());
+            commentDAO.deleteComment(comment.getCommentId());
         }
         return list;
     }
@@ -111,10 +110,10 @@ public class CommentService {
         Integer boardId = comment.getBoardId();
 
         //부모 댓글그룹의 answerNum(자식수)
-        Integer answerNumSum = commentDAO.findBySumAnswerNum(ref);
+        Integer answerNumSum = commentDAO.findBySumAnswerNum(ref, boardId);
         //SELECT SUM(answerNum) FROM BOARD_COMMENTS WHERE ref = ?1
         //부모 댓글그룹의 최댓값 step
-        Integer maxStep = commentDAO.findByNvlMaxStep(ref);
+        Integer maxStep = commentDAO.findByNvlMaxStep(ref, boardId);
         //SELECT MAX(step) FROM BOARD_COMMENTS WHERE ref = ?1
 
         //저장할 대댓글 step과 그룹내의최댓값 step의 조건 비교

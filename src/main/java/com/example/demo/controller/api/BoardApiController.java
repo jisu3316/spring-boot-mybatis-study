@@ -1,7 +1,6 @@
 package com.example.demo.controller.api;
 
 import com.example.demo.dto.request.BoardFormRequest;
-import com.example.demo.dto.response.BoardResponse;
 import com.example.demo.dto.response.Response;
 import com.example.demo.service.BoardService;
 import lombok.RequiredArgsConstructor;

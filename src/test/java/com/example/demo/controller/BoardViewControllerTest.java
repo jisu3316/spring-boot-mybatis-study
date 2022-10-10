@@ -61,7 +61,6 @@ class BoardViewControllerTest {
     @DisplayName("[GET] - 보드 리스트 페이지 테스트")
     @Test
     void givenNothing_whenRequestBoardListPage_thenReturnsBoardListPage() throws Exception {
-        System.out.println("mvc = " + mvc);
         // given
         given(boardService.boards(any(SearchBoardRequest.class))).willReturn(List.of());
 //        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4, 5));

@@ -1,8 +1,9 @@
 package com.example.demo.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.Objects;
 
 @Getter
 public class Comment {
@@ -41,4 +42,16 @@ public class Comment {
         this.parentNum = parentNum;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Comment)) return false;
+        Comment comment = (Comment) o;
+        return getCommentId() != null && getCommentId().equals(comment.getCommentId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCommentId());
+    }
 }
